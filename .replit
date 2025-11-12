@@ -1,7 +1,7 @@
 entrypoint = "index.html"
 
 hidden = [".config"]
-modules = ["nodejs-20", "web"]
+modules = ["nodejs-20", "web", "python-3.11"]
 
 
 [nix]
@@ -59,6 +59,10 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 40667
+externalPort = 3000
 
 [agent]
 expertMode = true

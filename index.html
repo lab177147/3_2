@@ -1,33 +1,52 @@
 <!doctype html>
 <html lang="pl">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>REST Countries – wyszukiwanie po stolicy</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dane stacji NOAA</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f5f5f5;
+      }
+      #loadBtn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      #loadBtn:hover {
+        background-color: #0056b3;
+      }
+    </style>
   </head>
   <body>
-    <h1>Wyszukaj kraj po stolicy</h1>
+    <h1>Stacje klimatyczne NOAA</h1>
+    <button id="loadBtn">Pobierz dane</button>
 
-    <form id="searchForm">
-      <input
-        type="text"
-        id="capitalInput"
-        placeholder="Wpisz nazwę stolicy (np. Warsaw)"
-      />
-      <button type="submit">Szukaj</button>
-    </form>
-
-    <div id="message"></div>
-
-    <table id="resultsTable">
+    <table id="stationsTable">
       <thead>
         <tr>
+          <th>Station ID</th>
           <th>Name</th>
-          <th>Capital</th>
-          <th>Population</th>
-          <th>Region</th>
-          <th>Subregion</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
         </tr>
       </thead>
       <tbody></tbody>

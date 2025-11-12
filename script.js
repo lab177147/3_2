@@ -1,50 +1,52 @@
-const form = document.getElementById("searchForm");
-const input = document.getElementById("capitalInput");
-const tbody = document.querySelector("#resultsTable tbody");
-const message = document.getElementById("message");
+(function () {
+  const API_URL = "https://www.ncei.noaa.gov/cdo-web/api/v2/stations";
+  const TOKEN = "LqyZzQuweBgjfgSYnUlHnWAexSWhFTTl";
+  const tableBody = document.querySelector("#stationsTable tbody");
+  const loadBtn = document.querySelector("#loadBtn");
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const capital = input.value.trim();
-  tbody.innerHTML = "";
-  message.textContent = "";
+  async function loadStations() {
+    try {
+      tableBody.innerHTML = "";
 
-  if (!capital) {
-    message.textContent = "Wpisz nazwę stolicy.";
-    return;
-  }
+      // Dodajemy limit, żeby nie pobierać zbyt wielu danych
+      const response = await fetch(${API_URL}?limit=10, {
+        headers: {
+          token: TOKEN,
+        },
+      });
 
-  try {
-    const response = await fetch(
-      `https://restcountries.com/v3.1/capital/${encodeURIComponent(capital)}`,
-    );
-    if (!response.ok) {
-      if (response.status === 404) {
-        message.textContent = "Nie znaleziono kraju dla podanej stolicy.";
-      } else {
-        message.textContent = `Błąd serwera: ${response.status}`;
+      if (!response.ok) {
+        throw new Error(Błąd HTTP: ${response.status});
       }
-      return;
-    }
 
-    const data = await response.json();
-    if (!Array.isArray(data) || data.length === 0) {
-      message.textContent = "Brak danych.";
-      return;
-    }
+      const data = await response.json();
 
-    data.forEach((country) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-<td>${country.name?.common ?? "-"}</td>
-<td>${country.capital?.[0] ?? "-"}</td>
-<td>${country.population?.toLocaleString() ?? "-"}</td>
-<td>${country.region ?? "-"}</td>
-<td>${country.subregion ?? "-"}</td>
-`;
-      tbody.appendChild(row);
-    });
-  } catch (error) {
-    message.textContent = `Błąd: ${error.message}`;
+      // Sprawdzamy, czy dane istnieją
+      if (!data.results || !Array.isArray(data.results)) {
+        throw new Error("Brak danych w odpowiedzi API");
+      }
+
+      // Iterujemy po stacjach
+      data.results.forEach((station) => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${station.id || "—"}</td>
+          <td>${station.name || "—"}</td>
+          <td>${station.latitude ?? "—"}</td>
+          <td>${station.longitude ?? "—"}</td>
+        `;
+
+        tableBody.appendChild(row);
+      });
+    } catch (err) {
+      console.error("Błąd podczas pobierania danych:", err);
+      alert(
+        "Nie udało się pobrać danych. Sprawdź token lub połączenie z internetem.",
+      );
+    }
   }
-});
+
+  loadBtn.addEventListener("click", loadStations);
+})();
+www.ncei.noaa.gov
